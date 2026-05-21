@@ -1,0 +1,99 @@
+class Student:
+    def __init__(self, name, marks):
+        self.name = name
+        self.marks = marks
+
+    def get_grade(self):
+        avg = sum(self.marks) / len(self.marks)
+        if avg >= 90:
+            return "A"
+        elif avg >= 75:
+            return "B"
+        elif avg >= 60:
+            return "C"
+        else:
+            return "F"
+        
+    def get_average(self):
+        return sum(self.marks) / len(self.marks)
+    
+    def __str__(self):
+        return f"{self.name} | Avg: {self.get_average():.1f} | Grade: {self.get_grade()}"
+    
+import csv 
+
+class GradeManager:
+        def __init__(self):
+            self.students = []
+
+        def add_student(self, name, marks):
+            student = Student(name, marks)
+            self.students.append(student)
+            print(f"Added: {student}")
+
+        def view_all(self):
+            if not self.students:
+                print("No students yet.")
+                return
+            for s in self.students:
+                print(s)
+
+        def save_to_file(self, filename="students.csv"):
+            with open(filename, "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(["Name", "Marks", "Average", "Grade"])
+                for s in self.students:
+                    writer.writerow([s.name, s.marks, s.get_average(), s.get_grade()])
+            print(f"Saved to {filename}")
+
+        def get_topper(self):
+            if not self.students:
+                return None
+            return max(self.students, key=lambda s: s.get_average())
+        
+        def get_lowest_scorer(self):
+            if not self.students:
+                return None
+            return min(self.students, key=lambda s: s.get_average())
+    
+
+def main():
+    manager = GradeManager()
+
+    while True:
+        print("\n--- Grade Manager ---")
+        print("1. Add Student")
+        print("2. View All Students")
+        print("3. Show Topper")
+        print("4. Show Lowest Scorer")
+        print("5. Save to CSV")
+        print("6. Exit")
+
+        choice = input("Choose: ")
+
+        if choice == "1":
+            name = input("Student name: ")
+            marks_input = input("Enter marks seperated by comma: ")
+            marks = [int(m) for m in marks_input.split(",")]
+            manager.add_student(name, marks)
+
+        elif choice == "2":
+            manager.view_all
+
+        elif choice == "3":
+            topper = manager.get_topper()
+            if topper:
+                print(f"Topper: {topper}")
+
+        elif choice == "4":
+            lowest_grade_scorer = manager.get_lowest_scorer()
+            if lowest_grade_scorer:
+                print(f"Lowest Grade Scorer: {lowest_grade_scorer}")
+
+        elif choice == "4":
+            manager.save_to_file()
+
+        elif choice == "5":
+            break
+
+main()
